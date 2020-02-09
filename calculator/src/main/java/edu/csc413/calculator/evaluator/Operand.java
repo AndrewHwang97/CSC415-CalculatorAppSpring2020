@@ -8,22 +8,24 @@ public class Operand {
     /**
      * construct operand from string token.
      */
-    public Operand(String token) {
+    int value;
 
+    public Operand(String token) {
+        this.value = Integer.valueOf(token);
     }
 
     /**
      * construct operand from integer
      */
     public Operand(int value) {
-
+        this.value = value;
     }
 
     /**
      * return value of operand
      */
     public int getValue() {
-        return 0;
+        return this.value;
     }
 
     /**
@@ -31,6 +33,11 @@ public class Operand {
      * operand.
      */
     public static boolean check(String token) {
-        return false;
+        for(int i = 0; i < token.length(); i++){
+            if(token.charAt(i) < 48 || token.charAt(i) > 57){
+                return false;
+            }
+        }
+        return true;
     }
 }

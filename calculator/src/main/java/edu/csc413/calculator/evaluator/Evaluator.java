@@ -18,6 +18,13 @@ public class Evaluator {
   public Evaluator() {
     operandStack = new Stack<>();
     operatorStack = new Stack<>();
+
+    //implementing hashmap In evaluator class so that we wont make a new hashmap everytime we make an operand.
+    Operator.operators.put("+", new AddOperator());
+    Operator.operators.put("-", new SubtractOperator());
+    Operator.operators.put("*", new MultiplyOperator());
+    Operator.operators.put("^", new PowerOperator());
+    Operator.operators.put("/", new DivideOperator());
   }
 
   public int evaluateExpression(String expression ) throws InvalidTokenException {
@@ -50,9 +57,9 @@ public class Evaluator {
           // The Operator class should contain an instance of a HashMap,
           // and values will be instances of the Operators.  See Operator class
           // skeleton for an example.
-          Operator newOperator = new Operator();
+          Operator newOperator = Operator.getOperator(expressionToken);
         
-          while (operatorStack.peek().priority() >= newOperator.priority() ) {
+          while (!this.operandStack.empty() && operatorStack.peek().priority() >= newOperator.priority() ) {
             // note that when we eval the expression 1 - 2 we will
             // push the 1 then the 2 and then do the subtraction operation
             // This means that the first number to be popped is the
