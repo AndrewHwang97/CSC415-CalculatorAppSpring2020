@@ -13,18 +13,11 @@ public class Evaluator {
   private Stack<Operand> operandStack;
   private Stack<Operator> operatorStack;
   private StringTokenizer expressionTokenizer;
-  private final String delimiters = " +/*-^";
+  private final String delimiters = " +/*-^()";
 
   public Evaluator() {
     operandStack = new Stack<>();
     operatorStack = new Stack<>();
-
-    //implementing hashmap In evaluator class so that we wont make a new hashmap everytime we make an operand.
-    Operator.operators.put("+", new AddOperator());
-    Operator.operators.put("-", new SubtractOperator());
-    Operator.operators.put("*", new MultiplyOperator());
-    Operator.operators.put("^", new PowerOperator());
-    Operator.operators.put("/", new DivideOperator());
   }
 
   public int evaluateExpression(String expression ) throws InvalidTokenException {
@@ -57,9 +50,14 @@ public class Evaluator {
           // The Operator class should contain an instance of a HashMap,
           // and values will be instances of the Operators.  See Operator class
           // skeleton for an example.
+
           Operator newOperator = Operator.getOperator(expressionToken);
-        
-          while (!this.operandStack.empty() && operatorStack.peek().priority() >= newOperator.priority() ) {
+          if(expressionToken.equals(")")){
+            processStack(operandStack,operatorStack);
+            continue;
+          }
+          while (!this.operatorStack.isEmpty() && operatorStack.peek().priority() >= newOperator.priority() && !expressionToken.equals("(")) {
+
             // note that when we eval the expression 1 - 2 we will
             // push the 1 then the 2 and then do the subtraction operation
             // This means that the first number to be popped is the
@@ -85,7 +83,27 @@ public class Evaluator {
     // In order to complete the evaluation we must empty the stacks,
     // that is, we should keep evaluating the operator stack until it is empty;
     // Suggestion: create a method that processes the operator stack until empty.
+    
+    while(!operatorStack.isEmpty()){
+      Operator operatorFromStack = operatorStack.pop();
+      Operand opTwo = operandStack.pop();
+      Operand opOne = operandStack.pop();
+      Operand result = operatorFromStack.execute(opOne,opTwo);
+      operandStack.push(result);
+    }
 
-    return 0;
+    return operandStack.pop().getValue();
+  }
+  public void processStack(Stack<Operand> operandStack,Stack<Operator> operatorStack){
+    while(!operatorStack.isEmpty()){
+
+      Operator operatorFromStack = operatorStack.pop();
+      if(operatorFromStack.getClass() == LeftParenOperator.class)
+        return;
+      Operand opTwo = operandStack.pop();
+      Operand opOne = operandStack.pop();
+      Operand result = operatorFromStack.execute(opOne,opTwo);
+      operandStack.push(result);
+    }
   }
 }

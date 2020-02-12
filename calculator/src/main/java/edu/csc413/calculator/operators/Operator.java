@@ -16,7 +16,15 @@ public abstract class Operator {
     // operators.put( "+", new AdditionOperator() );
     // operators.put( "-", new SubtractionOperator() );
       public static HashMap<String,Operator> operators = new HashMap<>();
-
+      static {
+          operators.put("+", new AddOperator());
+          operators.put("-", new SubtractOperator());
+          operators.put("*", new MultiplyOperator());
+          operators.put("^", new PowerOperator());
+          operators.put("/", new DivideOperator());
+          operators.put("(", new LeftParenOperator());
+          operators.put(")", new RightParenOperator());
+      }
 
     /**
      * retrieve the priority of an Operator
