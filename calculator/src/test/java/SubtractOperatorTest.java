@@ -45,7 +45,7 @@ public class SubtractOperatorTest {
         Operand operatorTwo =  new Operand(-6);
         SubtractOperator so =  new SubtractOperator();
         Operand result = new Operand(so.execute(operandOne,operatorTwo).getValue());
-        assertThat( result.getValue(), is(equalTo(-17)));
+        assertThat( result.getValue(), is(equalTo(17)));
     }
 
     @Test

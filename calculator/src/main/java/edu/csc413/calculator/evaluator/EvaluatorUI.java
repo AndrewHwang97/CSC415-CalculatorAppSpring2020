@@ -1,5 +1,7 @@
 package edu.csc413.calculator.evaluator;
 
+import edu.csc413.calculator.exceptions.InvalidTokenException;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,12 +11,15 @@ public class EvaluatorUI extends JFrame implements ActionListener {
 
     private TextField expressionTextField = new TextField();
     private Panel buttonPanel = new Panel();
+    private String inputText = " ";
+    Evaluator eval = new Evaluator();
+    int ans = 0;
 
     // total of 20 buttons on the calculator,
     // numbered from left to right, top to bottom
     // bText[] array contains the text for corresponding buttons
     private static final String[] buttonText = {
-        "7", "8", "9", "+", "4", "5", "6", "- ", "1", "2", "3",
+        "7", "8", "9", "+", "4", "5", "6", "-", "1", "2", "3",
         "*", "0", "^", "=", "/", "(", ")", "C", "CE"
     };
 
@@ -71,7 +76,40 @@ public class EvaluatorUI extends JFrame implements ActionListener {
      *                    button is pressed.
      */
     public void actionPerformed(ActionEvent actionEventObject) {
+        switch (actionEventObject.getActionCommand()){
+            case "CE":
+                if(inputText.length() >= 1)
+                    inputText = deleteOneInput(inputText);
+                outputTextToField(inputText);
+                break;
+            case "C":
+                inputText = deleteAllInput();
+                outputTextToField(inputText);
+                break;
+            case "=":
+                try {
+                    inputText = String.valueOf(eval.evaluateExpression(inputText));
+                    outputTextToField(inputText);
+                } catch (InvalidTokenException e) {
+                    e.printStackTrace();
+                }
+                break;
+            default:
+                inputText += actionEventObject.getActionCommand();
+                outputTextToField(inputText);
+        }
 
+    }
 
+    public String deleteOneInput(String text){
+        return text.substring(0,text.length()-1);
+
+    }
+    public String deleteAllInput(){
+        return "";
+    }
+
+    public void outputTextToField(String text){
+        expressionTextField.setText(inputText);
     }
 }
