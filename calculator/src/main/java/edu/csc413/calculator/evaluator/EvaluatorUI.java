@@ -78,7 +78,7 @@ public class EvaluatorUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent actionEventObject) {
         switch (actionEventObject.getActionCommand()){
             case "CE":
-                if(inputText.length() >= 2)
+                if(inputText.length() >= 1)
                     inputText = deleteOneInput(inputText);
                 outputTextToField(inputText);
                 break;
